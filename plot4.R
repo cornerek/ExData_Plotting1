@@ -1,0 +1,16 @@
+dane <- read.csv("household_power_consumption.txt",sep = ";", na.strings="?")
+dane$Date <- as.Date(dane$Date, format="%d/%m/%Y")
+dane$Date<-paste(dane$Date, dane$Time)
+dane$Time<-NULL
+sub.dane = subset(dane, as.Date(Date)>= '2007-02-01'& as.Date(Date)<='2007-02-02')
+sub.dane$Date<-as.POSIXct(strptime(sub.dane$Date, "%Y-%m-%d %H:%M:%S"))
+Sys.setlocale("LC_TIME", "C") ##this ensures that weekdays will be in English
+png(filename="plot4.png", width=480, height=480)
+par(mfrow=c(2,2))
+plot(sub.dane$Date,sub.dane$Global_active_power, type='l', xlab="", ylab="Global Active Power (kilowatts)")
+plot(sub.dane$Date,sub.dane$Voltage, type='l', xlab="datetime", ylab="Voltage")
+plot(sub.dane$Date, sub.dane$Sub_metering_1, type='l', xlab="", ylab="Energy sub metering")
+lines(sub.dane$Date, sub.dane$Sub_metering_2, col="red")
+lines(sub.dane$Date, sub.dane$Sub_metering_3, col="blue")
+plot(sub.dane$Date,sub.dane$Global_reactive_power, type='l', xlab="datetime", ylab="Global_reactive_power")
+dev.off()
